@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { DayPicker } from 'react-day-picker'
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { useI18n } from '../hooks/useI18n'
 
 interface DateTimePickerProps {
   value: { date: string; time: string }
@@ -7,29 +7,38 @@ interface DateTimePickerProps {
   placeholder?: string
 }
 
-function formatDate(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
-
-const startYear = 1970
-const endYear = new Date().getFullYear() + 10
+const MONTHS_ZH = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+const WEEKDAYS_ZH = ['日','一','二','三','四','五','六']
+const WEEKDAYS_EN = ['Su','Mo','Tu','We','Th','Fr','Sa']
 const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
 const minsecs = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 
-function ScrollColumn({ values, selected, onChange, label }: { values: string[]; selected: string; onChange: (v: string) => void; label: string }) {
-  const listRef = useRef<HTMLDivElement>(null)
+function daysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate()
+}
 
+function firstDayOfMonth(year: number, month: number) {
+  return new Date(year, month, 1).getDay()
+}
+
+function fmt(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function ScrollColumn({ values, selected, onChange, label }: { values: string[]; selected: string; onChange: (v: string) => void; label: string }) {
+  const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (listRef.current) {
+    if (ref.current) {
       const idx = values.indexOf(selected)
-      if (idx >= 0) listRef.current.scrollTop = idx * 32 - 48
+      if (idx >= 0) ref.current.scrollTop = idx * 32 - 48
     }
   }, [selected, values])
 
   return (
     <div className="flex flex-col items-center">
       <span className="text-[10px] font-bold text-surface-500 mb-1">{label}</span>
-      <div ref={listRef} className="h-[200px] w-11 overflow-y-auto rounded-lg bg-surface-800/50">
+      <div ref={ref} className="h-[196px] w-11 overflow-y-auto rounded-lg bg-surface-800/50">
         {values.map(v => (
           <button
             key={v}
@@ -50,10 +59,17 @@ function ScrollColumn({ values, selected, onChange, label }: { values: string[];
 }
 
 export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM-DD HH:MM:SS' }: DateTimePickerProps) {
+  const { locale, t } = useI18n()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const now = new Date()
+  const MONTHS = locale === 'zh' ? MONTHS_ZH : MONTHS_EN
+  const WEEKDAYS = locale === 'zh' ? WEEKDAYS_ZH : WEEKDAYS_EN
 
-  const selectedDate = value.date ? new Date(value.date + 'T00:00:00') : undefined
+  const selDate = value.date ? new Date(value.date + 'T00:00:00') : null
+  const [viewYear, setViewYear] = useState(selDate?.getFullYear() ?? now.getFullYear())
+  const [viewMonth, setViewMonth] = useState(selDate?.getMonth() ?? now.getMonth())
+
   const timeParts = (value.time || '00:00:00').split(':')
   const h = timeParts[0] || '00'
   const m = timeParts[1] || '00'
@@ -69,17 +85,34 @@ export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const setTime = (hour: string, min: string, sec: string) => {
+  const setTime = useCallback((hour: string, min: string, sec: string) => {
     onChange(value.date, `${hour}:${min}:${sec}`)
-  }
+  }, [value.date, onChange])
 
   const handleNow = () => {
-    const now = new Date()
-    onChange(
-      formatDate(now),
-      `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`,
-    )
+    const n = new Date()
+    const d = fmt(n)
+    const t = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`
+    onChange(d, t)
+    setViewYear(n.getFullYear())
+    setViewMonth(n.getMonth())
   }
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(viewYear - 1) }
+    else setViewMonth(viewMonth - 1)
+  }
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(viewYear + 1) }
+    else setViewMonth(viewMonth + 1)
+  }
+
+  const days = daysInMonth(viewYear, viewMonth)
+  const startDay = firstDayOfMonth(viewYear, viewMonth)
+  const todayStr = fmt(now)
+  const selStr = selDate ? fmt(selDate) : ''
+
+  const yearOptions = Array.from({ length: 80 }, (_, i) => 1970 + i)
 
   return (
     <div ref={ref} className="relative">
@@ -96,55 +129,70 @@ export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM
         </svg>
       </button>
       {open && (
-        <div className="absolute z-50 mt-1 rounded-xl border border-surface-700/50 bg-surface-900 backdrop-blur-xl shadow-xl shadow-black/20 p-3">
-          <style>{`
-            .rdp-dropdown select {
-              background: rgb(var(--s-900));
-              color: rgb(var(--s-100));
-              border: 1px solid rgb(var(--s-700) / 0.5);
-              border-radius: 0.5rem;
-              padding: 0.25rem 0.5rem;
-              font-size: 0.8rem;
-              font-weight: 600;
-              outline: none;
-              cursor: pointer;
-            }
-            .rdp-dropdown select:focus {
-              border-color: rgb(99 102 241 / 0.7);
-              box-shadow: 0 0 0 2px rgb(99 102 241 / 0.2);
-            }
-          `}</style>
-          <div className="flex gap-3">
-            <DayPicker
-              mode="single"
-              captionLayout="dropdown"
-              startMonth={new Date(startYear, 0)}
-              endMonth={new Date(endYear, 11)}
-              selected={selectedDate}
-              defaultMonth={selectedDate || new Date()}
-              onSelect={(d) => {
-                if (d) onChange(formatDate(d), value.time || '00:00:00')
-              }}
-              classNames={{
-                root: 'text-surface-100 text-sm',
-                months: 'flex flex-col',
-                month_caption: 'flex justify-center items-center h-10 font-semibold text-surface-200',
-                dropdowns: 'flex items-center justify-center gap-2',
-                nav: 'flex items-center justify-between absolute top-3 left-3 right-3',
-                button_previous: 'h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors',
-                button_next: 'h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors',
-                weekdays: 'flex',
-                weekday: 'w-9 h-9 flex items-center justify-center text-xs font-medium text-surface-500',
-                week: 'flex',
-                day: 'w-9 h-9 flex items-center justify-center rounded-lg text-sm transition-colors hover:bg-surface-800 cursor-pointer',
-                day_button: 'w-full h-full flex items-center justify-center rounded-lg',
-                selected: 'bg-indigo-600 text-white hover:bg-indigo-500 font-semibold',
-                today: 'ring-1 ring-indigo-500/50 font-semibold text-indigo-400',
-                outside: 'text-surface-600 opacity-50',
-                disabled: 'text-surface-700 cursor-not-allowed',
-              }}
-            />
-            <div className="border-l border-surface-700/50 pl-3 flex gap-1 items-start pt-2">
+        <div className="absolute z-50 mt-1 rounded-xl border border-surface-700/50 bg-surface-900 backdrop-blur-xl shadow-xl shadow-black/20 p-4">
+          <div className="flex gap-4">
+            {/* Calendar */}
+            <div className="w-[280px]">
+              {/* Header: nav + year/month */}
+              <div className="flex items-center justify-between mb-3">
+                <button type="button" onClick={prevMonth} className="h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                </button>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={viewYear}
+                    onChange={(e) => setViewYear(Number(e.target.value))}
+                    className="bg-surface-800 text-surface-100 border border-surface-700/50 rounded-lg px-2 py-1 text-sm font-semibold focus:outline-none focus:border-indigo-500/70 cursor-pointer"
+                  >
+                    {yearOptions.map(y => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                  <select
+                    value={viewMonth}
+                    onChange={(e) => setViewMonth(Number(e.target.value))}
+                    className="bg-surface-800 text-surface-100 border border-surface-700/50 rounded-lg px-2 py-1 text-sm font-semibold focus:outline-none focus:border-indigo-500/70 cursor-pointer"
+                  >
+                    {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                  </select>
+                </div>
+                <button type="button" onClick={nextMonth} className="h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                </button>
+              </div>
+              {/* Weekday headers */}
+              <div className="grid grid-cols-7 mb-1">
+                {WEEKDAYS.map(d => (
+                  <div key={d} className="h-9 flex items-center justify-center text-xs font-medium text-surface-500">{d}</div>
+                ))}
+              </div>
+              {/* Days grid */}
+              <div className="grid grid-cols-7">
+                {Array.from({ length: startDay }).map((_, i) => <div key={`e${i}`} className="h-9" />)}
+                {Array.from({ length: days }, (_, i) => {
+                  const day = i + 1
+                  const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                  const isSelected = dateStr === selStr
+                  const isToday = dateStr === todayStr
+                  return (
+                    <button
+                      key={day}
+                      type="button"
+                      onClick={() => onChange(dateStr, value.time || '00:00:00')}
+                      className={`h-9 w-full flex items-center justify-center rounded-lg text-sm transition-colors ${
+                        isSelected
+                          ? 'bg-indigo-600 text-white font-semibold'
+                          : isToday
+                            ? 'ring-1 ring-indigo-500/50 text-indigo-400 font-semibold hover:bg-surface-800'
+                            : 'text-surface-200 hover:bg-surface-800'
+                      }`}
+                    >
+                      {day}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            {/* Time */}
+            <div className="border-l border-surface-700/50 pl-3 flex gap-1 items-start">
               <ScrollColumn values={hours} selected={h} onChange={(v) => setTime(v, m, s)} label="H" />
               <ScrollColumn values={minsecs} selected={m} onChange={(v) => setTime(h, v, s)} label="M" />
               <ScrollColumn values={minsecs} selected={s} onChange={(v) => setTime(h, m, v)} label="S" />
@@ -153,9 +201,9 @@ export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM
           <button
             type="button"
             onClick={handleNow}
-            className="mt-2 w-full text-center text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors py-1.5 rounded-lg hover:bg-surface-800/50"
+            className="mt-3 w-full text-center text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors py-1.5 rounded-lg hover:bg-surface-800/50"
           >
-            Now
+            {t('Now')}
           </button>
         </div>
       )}
