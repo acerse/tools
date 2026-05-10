@@ -58,9 +58,12 @@ function ScrollColumn({ values, selected, onChange, label }: { values: string[];
   )
 }
 
+type PickerView = 'days' | 'months' | 'years'
+
 export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM-DD HH:MM:SS' }: DateTimePickerProps) {
   const { locale, t } = useI18n()
   const [open, setOpen] = useState(false)
+  const [pickerView, setPickerView] = useState<PickerView>('days')
   const ref = useRef<HTMLDivElement>(null)
   const now = new Date()
   const MONTHS = locale === 'zh' ? MONTHS_ZH : MONTHS_EN
@@ -112,7 +115,8 @@ export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM
   const todayStr = fmt(now)
   const selStr = selDate ? fmt(selDate) : ''
 
-  const yearOptions = Array.from({ length: 80 }, (_, i) => 1970 + i)
+  const yearPageStart = Math.floor(viewYear / 12) * 12
+  const yearPageYears = Array.from({ length: 12 }, (_, i) => yearPageStart + i)
 
   return (
     <div ref={ref} className="relative">
@@ -133,63 +137,105 @@ export default function DateTimePicker({ value, onChange, placeholder = 'YYYY-MM
           <div className="flex gap-4">
             {/* Calendar */}
             <div className="w-[280px]">
-              {/* Header: nav + year/month */}
+              {/* Header */}
               <div className="flex items-center justify-between mb-3">
-                <button type="button" onClick={prevMonth} className="h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors">
+                <button type="button" onClick={() => {
+                  if (pickerView === 'days') prevMonth()
+                  else if (pickerView === 'years') { const s = yearPageStart - 12; setViewYear(s > 1970 ? s : 1970) }
+                }} className="h-8 w-8 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors">
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                 </button>
-                <div className="flex items-center gap-2">
-                  <select
-                    value={viewYear}
-                    onChange={(e) => setViewYear(Number(e.target.value))}
-                    className="bg-surface-800 text-surface-100 border border-surface-700/50 rounded-lg px-2 py-1 text-sm font-semibold focus:outline-none focus:border-indigo-500/70 cursor-pointer"
-                  >
-                    {yearOptions.map(y => <option key={y} value={y}>{y}</option>)}
-                  </select>
-                  <select
-                    value={viewMonth}
-                    onChange={(e) => setViewMonth(Number(e.target.value))}
-                    className="bg-surface-800 text-surface-100 border border-surface-700/50 rounded-lg px-2 py-1 text-sm font-semibold focus:outline-none focus:border-indigo-500/70 cursor-pointer"
-                  >
-                    {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
-                  </select>
-                </div>
-                <button type="button" onClick={nextMonth} className="h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors">
+                <button
+                  type="button"
+                  onClick={() => setPickerView(pickerView === 'days' ? 'months' : pickerView === 'months' ? 'years' : 'days')}
+                  className="text-sm font-semibold text-surface-100 hover:text-indigo-400 transition-colors px-2 py-1 rounded-lg hover:bg-surface-800/50"
+                >
+                  {pickerView === 'years'
+                    ? `${yearPageYears[0]} - ${yearPageYears[yearPageYears.length - 1]}`
+                    : pickerView === 'months'
+                      ? `${viewYear}`
+                      : `${viewYear} ${MONTHS[viewMonth]}`
+                  }
+                </button>
+                <button type="button" onClick={() => {
+                  if (pickerView === 'days') nextMonth()
+                  else if (pickerView === 'years') { setViewYear(yearPageStart + 12) }
+                }} className="h-8 w-8 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors">
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                 </button>
               </div>
-              {/* Weekday headers */}
-              <div className="grid grid-cols-7 mb-1">
-                {WEEKDAYS.map(d => (
-                  <div key={d} className="h-9 flex items-center justify-center text-xs font-medium text-surface-500">{d}</div>
-                ))}
-              </div>
-              {/* Days grid */}
-              <div className="grid grid-cols-7">
-                {Array.from({ length: startDay }).map((_, i) => <div key={`e${i}`} className="h-9" />)}
-                {Array.from({ length: days }, (_, i) => {
-                  const day = i + 1
-                  const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-                  const isSelected = dateStr === selStr
-                  const isToday = dateStr === todayStr
-                  return (
+
+              {/* Year picker */}
+              {pickerView === 'years' && (
+                <div className="grid grid-cols-3 gap-2">
+                  {yearPageYears.map(y => (
                     <button
-                      key={day}
+                      key={y}
                       type="button"
-                      onClick={() => onChange(dateStr, value.time || '00:00:00')}
-                      className={`h-9 w-full flex items-center justify-center rounded-lg text-sm transition-colors ${
-                        isSelected
-                          ? 'bg-indigo-600 text-white font-semibold'
-                          : isToday
-                            ? 'ring-1 ring-indigo-500/50 text-indigo-400 font-semibold hover:bg-surface-800'
-                            : 'text-surface-200 hover:bg-surface-800'
+                      onClick={() => { setViewYear(y); setPickerView('months') }}
+                      className={`h-10 rounded-lg text-sm font-medium transition-colors ${
+                        y === viewYear ? 'bg-indigo-600 text-white' :
+                        y === now.getFullYear() ? 'ring-1 ring-indigo-500/50 text-indigo-400 hover:bg-surface-800' :
+                        'text-surface-300 hover:bg-surface-800'
                       }`}
-                    >
-                      {day}
-                    </button>
-                  )
-                })}
-              </div>
+                    >{y}</button>
+                  ))}
+                </div>
+              )}
+
+              {/* Month picker */}
+              {pickerView === 'months' && (
+                <div className="grid grid-cols-3 gap-2">
+                  {MONTHS.map((mn, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => { setViewMonth(i); setPickerView('days') }}
+                      className={`h-10 rounded-lg text-sm font-medium transition-colors ${
+                        i === viewMonth ? 'bg-indigo-600 text-white' :
+                        i === now.getMonth() && viewYear === now.getFullYear() ? 'ring-1 ring-indigo-500/50 text-indigo-400 hover:bg-surface-800' :
+                        'text-surface-300 hover:bg-surface-800'
+                      }`}
+                    >{mn}</button>
+                  ))}
+                </div>
+              )}
+
+              {/* Day picker */}
+              {pickerView === 'days' && (
+                <>
+                  <div className="grid grid-cols-7 mb-1">
+                    {WEEKDAYS.map(d => (
+                      <div key={d} className="h-9 flex items-center justify-center text-xs font-medium text-surface-500">{d}</div>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-7">
+                    {Array.from({ length: startDay }).map((_, i) => <div key={`e${i}`} className="h-9" />)}
+                    {Array.from({ length: days }, (_, i) => {
+                      const day = i + 1
+                      const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                      const isSelected = dateStr === selStr
+                      const isToday = dateStr === todayStr
+                      return (
+                        <button
+                          key={day}
+                          type="button"
+                          onClick={() => onChange(dateStr, value.time || '00:00:00')}
+                          className={`h-9 w-full flex items-center justify-center rounded-lg text-sm transition-colors ${
+                            isSelected
+                              ? 'bg-indigo-600 text-white font-semibold'
+                              : isToday
+                                ? 'ring-1 ring-indigo-500/50 text-indigo-400 font-semibold hover:bg-surface-800'
+                                : 'text-surface-200 hover:bg-surface-800'
+                          }`}
+                        >
+                          {day}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </>
+              )}
             </div>
             {/* Time */}
             <div className="border-l border-surface-700/50 pl-3 flex gap-1 items-start">
