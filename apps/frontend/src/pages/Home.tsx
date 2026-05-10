@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { tools } from '../tools/registry'
 import { CATEGORY_ORDER, type ToolCategory } from '../tools/types'
 import { useI18n } from '../hooks/useI18n'
+import { ToolIcon } from '../components/ToolIcon'
 
 export function Home() {
   const [search, setSearch] = useState('')
@@ -127,8 +128,8 @@ export function Home() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-violet-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative flex items-start gap-3.5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-surface-800/80 to-surface-700/40 text-xs font-bold text-surface-300 transition-all duration-300 group-hover:from-indigo-500/20 group-hover:to-violet-500/20 group-hover:text-indigo-400">
-                    {tool.icon}
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-surface-800/80 to-surface-700/40 text-surface-300 transition-all duration-300 group-hover:from-indigo-500/20 group-hover:to-violet-500/20 group-hover:text-indigo-400">
+                    <ToolIcon id={tool.id} className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="text-sm font-semibold text-surface-100 transition-colors group-hover:text-indigo-400">

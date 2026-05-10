@@ -2,6 +2,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { CATEGORY_ORDER } from '../tools/types'
 import { tools } from '../tools/registry'
 import { useI18n } from '../hooks/useI18n'
+import { ToolIcon } from './ToolIcon'
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const location = useLocation()
@@ -58,8 +59,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                       }`
                     }
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-surface-800/60 text-[10px] font-bold">
-                      {tool.icon}
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-surface-800/60 text-surface-400">
+                      <ToolIcon id={tool.id} className="h-3.5 w-3.5" />
                     </span>
                     {toolName(tool.id)}
                   </NavLink>
