@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+target/
+.wrangler/
+.dev.vars
+.env
+*.log
+.DS_Store
+pkg/
+wasm-pack.log
