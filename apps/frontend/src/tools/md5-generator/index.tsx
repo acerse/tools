@@ -69,8 +69,11 @@ function md5(input: string): string {
   }
 
   // Append original length as 64-bit little-endian
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 4; i++) {
     bytes.push((bitLen >>> (i * 8)) & 0xff);
+  }
+  for (let i = 0; i < 4; i++) {
+    bytes.push(0);
   }
 
   // Per-round shift amounts

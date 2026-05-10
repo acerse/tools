@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import QRCode from 'qrcode';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
@@ -21,8 +21,6 @@ export function QRGenerator() {
   const [errorCorrection, setErrorCorrection] = useState<ErrorCorrectionLevel>('M');
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const generateQR = useCallback(async () => {
     if (!text.trim()) {
       setError('Please enter text or a URL to generate a QR code.');
@@ -138,7 +136,7 @@ export function QRGenerator() {
                 alt="Generated QR Code"
                 style={{ width: size, height: size, imageRendering: 'pixelated' }}
               />
-              <canvas ref={canvasRef} className="hidden" />
+
               <div className="flex gap-2 items-center">
                 <CopyButton text={text} />
                 <span className="text-sm text-gray-500">
