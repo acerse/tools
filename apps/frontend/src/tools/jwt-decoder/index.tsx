@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import { useI18n } from '../../hooks/useI18n';
 
 function decodeBase64Url(str: string): string {
@@ -120,31 +119,19 @@ export function JwtDecoder() {
 
         {header && (
           <div className="card p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="tool-label">{t('Header')}</label>
-              <CopyButton text={header} />
-            </div>
-            <OutputBox content={header} />
+            <OutputBox label={t('Header')} content={header} />
           </div>
         )}
 
         {payload && (
           <div className="card p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="tool-label">{t('Payload')}</label>
-              <CopyButton text={payload} />
-            </div>
-            <OutputBox content={payload} />
+            <OutputBox label={t('Payload')} content={payload} />
           </div>
         )}
 
         {signature && (
           <div className="card p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="tool-label">{t('Signature')}</label>
-              <CopyButton text={signature} />
-            </div>
-            <OutputBox content={signature} />
+            <OutputBox label={t('Signature')} content={signature} />
           </div>
         )}
       </div>

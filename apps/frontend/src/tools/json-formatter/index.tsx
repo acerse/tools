@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import Select from '../../components/Select';
 import { useI18n } from '../../hooks/useI18n';
 
@@ -122,11 +121,7 @@ export function JsonFormatter() {
 
       {output && (
         <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <label className="tool-label mb-0">{t('Output')}</label>
-            <CopyButton text={output} />
-          </div>
-          <OutputBox content={output} />
+          <OutputBox label={t('Output')} content={output} />
         </div>
       )}
     </ToolLayout>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import { useI18n } from '../../hooks/useI18n';
 
 // Pure JavaScript MD5 implementation (RFC 1321)
@@ -220,11 +219,7 @@ export function Md5Generator() {
 
         {hash && (
           <div className="card p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="tool-label">{t('MD5 Hash (Hex)')}</label>
-              <CopyButton text={hash} />
-            </div>
-            <OutputBox content={hash} />
+            <OutputBox label={t('MD5 Hash (Hex)')} content={hash} />
             <p className="text-xs text-surface-500">128 {t('bits')} / 16 {t('bytes')}</p>
           </div>
         )}

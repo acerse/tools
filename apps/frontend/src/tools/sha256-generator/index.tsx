@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import { useI18n } from '../../hooks/useI18n';
 
 async function generateSha256(text: string): Promise<string> {
@@ -83,11 +82,7 @@ export function Sha256Generator() {
 
         {hash && (
           <div className="card p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="tool-label">{t('SHA-256 Hash (Hex)')}</label>
-              <CopyButton text={hash} />
-            </div>
-            <OutputBox content={hash} />
+            <OutputBox label={t('SHA-256 Hash (Hex)')} content={hash} />
             <p className="text-xs text-surface-500">{hash.length * 4} {t('bits')} / {hash.length / 2} {t('bytes')}</p>
           </div>
         )}

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import DateTimePicker from '../../components/DateTimePicker';
 import { useI18n } from '../../hooks/useI18n';
 
@@ -172,11 +171,7 @@ export function TimestampConverter() {
 
           {convertedFromTs && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="tool-label">{t('Result')}</label>
-                <CopyButton text={tsOutputText} />
-              </div>
-              <OutputBox content={tsOutputText} />
+              <OutputBox label={t('Result')} content={tsOutputText} />
             </div>
           )}
         </div>
@@ -194,11 +189,7 @@ export function TimestampConverter() {
 
           {convertedFromDate && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="tool-label">{t('Result')}</label>
-                <CopyButton text={dateOutputText} />
-              </div>
-              <OutputBox content={dateOutputText} />
+              <OutputBox label={t('Result')} content={dateOutputText} />
             </div>
           )}
         </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import Checkbox from '../../components/Checkbox';
 import { useI18n } from '../../hooks/useI18n';
 
@@ -141,11 +140,7 @@ export function PasswordGenerator() {
 
       {password && (
         <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <label className="tool-label mb-0">{t('Generated Password')}</label>
-            <CopyButton text={password} />
-          </div>
-          <OutputBox content={password} />
+          <OutputBox label={t('Generated Password')} content={password} />
 
           {strength && (
             <div className="card mt-4">

@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import { useI18n } from '../../hooks/useI18n';
 
 interface MatchDetail {
@@ -173,12 +172,9 @@ export function RegexTester() {
 
         {pattern && testString && !error && (
           <div className="card p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="tool-label">
-                {t('Match Details')} ({matches.length} {matches.length !== 1 ? t('matches') : t('match')})
-              </label>
-              {matchDetailsText && <CopyButton text={matchDetailsText} />}
-            </div>
+            <label className="tool-label">
+              {t('Match Details')} ({matches.length} {matches.length !== 1 ? t('matches') : t('match')})
+            </label>
             {matches.length > 0 ? (
               <OutputBox content={matchDetailsText} />
             ) : (

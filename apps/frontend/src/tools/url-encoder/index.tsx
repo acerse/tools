@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
-import CopyButton from '../../components/CopyButton';
 import { useI18n } from '../../hooks/useI18n';
 
 export function UrlEncoder() {
@@ -77,21 +76,13 @@ export function UrlEncoder() {
 
       {componentOutput && (
         <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <label className="tool-label mb-0">{t('encodeURIComponent Result')}</label>
-            <CopyButton text={componentOutput} />
-          </div>
-          <OutputBox content={componentOutput} />
+          <OutputBox label={t('encodeURIComponent Result')} content={componentOutput} />
         </div>
       )}
 
       {uriOutput && (
         <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <label className="tool-label mb-0">{t('encodeURI Result')}</label>
-            <CopyButton text={uriOutput} />
-          </div>
-          <OutputBox content={uriOutput} />
+          <OutputBox label={t('encodeURI Result')} content={uriOutput} />
         </div>
       )}
     </ToolLayout>
