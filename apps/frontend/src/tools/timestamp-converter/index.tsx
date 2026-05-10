@@ -187,8 +187,9 @@ export function TimestampConverter() {
             <div>
               <label className="tool-label">{t('Date')}</label>
               <input
-                type="date"
+                type="text"
                 className="tool-input"
+                placeholder="2026-05-10"
                 value={dateInput}
                 onChange={(e) => setDateInput(e.target.value)}
               />
@@ -196,9 +197,9 @@ export function TimestampConverter() {
             <div>
               <label className="tool-label">{t('Time (optional)')}</label>
               <input
-                type="time"
+                type="text"
                 className="tool-input"
-                step="1"
+                placeholder="14:30:00"
                 value={timeInput}
                 onChange={(e) => setTimeInput(e.target.value)}
               />

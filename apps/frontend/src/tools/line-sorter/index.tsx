@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import Select from '../../components/Select';
 import { useI18n } from '../../hooks/useI18n';
 
 type SortMode =
@@ -138,22 +139,14 @@ export function LineSorter() {
 
           <div>
             <label className="tool-label">{t('Sort Mode')}</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {sortOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  className={sortMode === opt.value ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => {
-                    setSortMode(opt.value);
-                    if (opt.value === 'random') {
-                      setShuffleKey((k) => k + 1);
-                    }
-                  }}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
+            <Select
+              value={sortMode}
+              onChange={(v) => {
+                setSortMode(v as SortMode);
+                if (v === 'random') setShuffleKey((k) => k + 1);
+              }}
+              options={sortOptions}
+            />
           </div>
 
           {sortMode === 'random' && (

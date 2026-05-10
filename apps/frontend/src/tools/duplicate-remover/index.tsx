@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import RadioGroup from '../../components/RadioGroup';
 import { useI18n } from '../../hooks/useI18n';
 
 type KeepOccurrence = 'first' | 'last';
@@ -87,56 +88,38 @@ export function DuplicateRemover() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="tool-label">{t('Case Sensitivity')}</label>
-              <div className="flex gap-2">
-                <button
-                  className={caseSensitive ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => setCaseSensitive(true)}
-                >
-                  {t('Case Sensitive')}
-                </button>
-                <button
-                  className={!caseSensitive ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => setCaseSensitive(false)}
-                >
-                  {t('Case Insensitive')}
-                </button>
-              </div>
+              <RadioGroup
+                value={caseSensitive ? 'true' : 'false'}
+                onChange={(v) => setCaseSensitive(v === 'true')}
+                options={[
+                  { value: 'true', label: t('Case Sensitive') },
+                  { value: 'false', label: t('Case Insensitive') },
+                ]}
+              />
             </div>
 
             <div>
               <label className="tool-label">{t('Whitespace')}</label>
-              <div className="flex gap-2">
-                <button
-                  className={trimWhitespace ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => setTrimWhitespace(true)}
-                >
-                  {t('Trim')}
-                </button>
-                <button
-                  className={!trimWhitespace ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => setTrimWhitespace(false)}
-                >
-                  {t('Keep')}
-                </button>
-              </div>
+              <RadioGroup
+                value={trimWhitespace ? 'true' : 'false'}
+                onChange={(v) => setTrimWhitespace(v === 'true')}
+                options={[
+                  { value: 'true', label: t('Trim') },
+                  { value: 'false', label: t('Keep') },
+                ]}
+              />
             </div>
 
             <div>
               <label className="tool-label">{t('Keep Occurrence')}</label>
-              <div className="flex gap-2">
-                <button
-                  className={keepOccurrence === 'first' ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => setKeepOccurrence('first')}
-                >
-                  {t('First')}
-                </button>
-                <button
-                  className={keepOccurrence === 'last' ? 'btn-primary' : 'btn-secondary'}
-                  onClick={() => setKeepOccurrence('last')}
-                >
-                  {t('Last')}
-                </button>
-              </div>
+              <RadioGroup
+                value={keepOccurrence}
+                onChange={(v) => setKeepOccurrence(v as KeepOccurrence)}
+                options={[
+                  { value: 'first', label: t('First') },
+                  { value: 'last', label: t('Last') },
+                ]}
+              />
             </div>
           </div>
 

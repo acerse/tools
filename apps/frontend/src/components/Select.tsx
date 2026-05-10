@@ -37,7 +37,7 @@ export default function Select({ value, onChange, options, className = '' }: Sel
                 key={opt.value}
                 value={opt.value}
                 className={({ active, selected: sel }) =>
-                  `cursor-pointer px-4 py-2.5 text-sm transition-colors ${
+                  `cursor-pointer px-4 py-2.5 text-sm whitespace-nowrap transition-colors ${
                     sel ? 'bg-indigo-500/15 text-indigo-400' :
                     active ? 'bg-surface-800/60 text-surface-100' :
                     'text-surface-300'

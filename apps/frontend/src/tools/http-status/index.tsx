@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import RadioGroup from '../../components/RadioGroup';
 import { useI18n } from '../../hooks/useI18n';
 
 interface StatusCode {
@@ -154,31 +155,14 @@ export function HttpStatus() {
 
           <div className="mt-4">
             <label className="tool-label">{t('Filter by Category')}</label>
-            <div className="flex flex-wrap gap-2">
-              <button
-                className={`px-3 py-1 rounded text-sm border ${
-                  selectedCategory === 'all'
-                    ? 'bg-surface-800 text-white border-surface-700'
-                    : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
-                }`}
-                onClick={() => setSelectedCategory('all')}
-              >
-                {t('All')}
-              </button>
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  className={`px-3 py-1 rounded text-sm border ${
-                    selectedCategory === cat
-                      ? 'bg-surface-800 text-white border-surface-700'
-                      : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
-                  }`}
-                  onClick={() => setSelectedCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+            <RadioGroup
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+              options={[
+                { value: 'all', label: t('All') },
+                ...CATEGORIES.map(cat => ({ value: cat, label: t(cat) })),
+              ]}
+            />
           </div>
         </div>
 
