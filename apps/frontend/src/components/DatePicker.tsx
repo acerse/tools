@@ -14,6 +14,9 @@ function formatDate(d: Date): string {
   return `${y}-${m}-${day}`
 }
 
+const startYear = 1970
+const endYear = new Date().getFullYear() + 10
+
 export default function DatePicker({ value, onChange, placeholder = 'YYYY-MM-DD' }: DatePickerProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -41,9 +44,31 @@ export default function DatePicker({ value, onChange, placeholder = 'YYYY-MM-DD'
       </button>
       {open && (
         <div className="absolute z-50 mt-1 rounded-xl border border-surface-700/50 bg-surface-900 backdrop-blur-xl shadow-xl shadow-black/20 p-3">
+          <style>{`
+            .rdp-dropdown select {
+              background: rgb(var(--s-900));
+              color: rgb(var(--s-100));
+              border: 1px solid rgb(var(--s-700) / 0.5);
+              border-radius: 0.5rem;
+              padding: 0.25rem 0.5rem;
+              font-size: 0.875rem;
+              font-weight: 600;
+              outline: none;
+              cursor: pointer;
+              appearance: auto;
+            }
+            .rdp-dropdown select:focus {
+              border-color: rgb(99 102 241 / 0.7);
+              box-shadow: 0 0 0 2px rgb(99 102 241 / 0.2);
+            }
+          `}</style>
           <DayPicker
             mode="single"
+            captionLayout="dropdown"
+            startMonth={new Date(startYear, 0)}
+            endMonth={new Date(endYear, 11)}
             selected={selected}
+            defaultMonth={selected || new Date()}
             onSelect={(d) => {
               if (d) {
                 onChange(formatDate(d))
@@ -54,6 +79,7 @@ export default function DatePicker({ value, onChange, placeholder = 'YYYY-MM-DD'
               root: 'text-surface-100 text-sm',
               months: 'flex flex-col',
               month_caption: 'flex justify-center items-center h-10 font-semibold text-surface-200',
+              dropdowns: 'flex items-center justify-center gap-2',
               nav: 'flex items-center justify-between absolute top-3 left-3 right-3',
               button_previous: 'h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors',
               button_next: 'h-7 w-7 rounded-lg flex items-center justify-center text-surface-400 hover:bg-surface-800 hover:text-surface-200 transition-colors',

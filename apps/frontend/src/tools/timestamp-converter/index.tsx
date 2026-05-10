@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
-import DatePicker from '../../components/DatePicker';
+import DateTimePicker from '../../components/DateTimePicker';
 import { useI18n } from '../../hooks/useI18n';
 
 function getRelativeTime(date: Date): string {
@@ -184,26 +184,10 @@ export function TimestampConverter() {
         {/* Date to Timestamp */}
         <div className="card p-4 space-y-4">
           <label className="tool-label">{t('Date to Unix Timestamp')}</label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="tool-label">{t('Date')}</label>
-              <DatePicker
-                value={dateInput}
-                onChange={setDateInput}
-                placeholder="YYYY-MM-DD"
-              />
-            </div>
-            <div>
-              <label className="tool-label">{t('Time (optional)')}</label>
-              <input
-                type="text"
-                className="tool-input"
-                placeholder="14:30:00"
-                value={timeInput}
-                onChange={(e) => setTimeInput(e.target.value)}
-              />
-            </div>
-          </div>
+          <DateTimePicker
+            value={{ date: dateInput, time: timeInput }}
+            onChange={(d, t) => { setDateInput(d); setTimeInput(t); }}
+          />
           <button className="btn-primary" onClick={convertDate}>
             {t('Convert to Timestamp')}
           </button>
