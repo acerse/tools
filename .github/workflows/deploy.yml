@@ -16,22 +16,11 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Install worker-build
-        run: cargo install worker-build
-
-      - name: Install frontend dependencies
+      - name: Install dependencies
         run: cd apps/frontend && bun install --frozen-lockfile
 
-      - name: Build frontend
+      - name: Build
         run: cd apps/frontend && bun run build
-
-      - name: Build worker
-        run: cd apps/worker && worker-build --release
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3

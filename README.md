@@ -34,12 +34,10 @@ Fast, privacy-friendly developer tools running on Cloudflare's edge network. All
 ```
 apps/
   frontend/    Vite + React + TypeScript + TailwindCSS
-  worker/      Rust Cloudflare Worker (workers-rs)
 ```
 
 - **Frontend**: SPA with lazy-loaded tool components, dark mode, responsive design
-- **Worker**: Rust compiled to WASM via worker-build, serves API endpoints
-- **Static assets**: Served via Cloudflare's edge asset serving
+- **Static assets**: Served via Cloudflare's edge asset serving with SPA fallback
 - **Tool registry**: Centralized registry pattern for easy tool addition
 
 ### Adding a New Tool
@@ -54,45 +52,28 @@ apps/
 |-------|-----------|
 | Frontend | Vite, React 19, TypeScript, TailwindCSS |
 | Package Manager | Bun |
-| Worker | Rust, workers-rs, WebAssembly |
-| Deployment | Cloudflare Workers, Wrangler |
+| Deployment | Cloudflare Workers (Static Assets), Wrangler |
 | CI/CD | GitHub Actions |
 
 ## Prerequisites
 
 - Bun 1.0+
-- Rust toolchain with `wasm32-unknown-unknown` target
 - Wrangler CLI (`bun add -g wrangler`)
-
-```bash
-rustup target add wasm32-unknown-unknown
-cargo install worker-build
-```
 
 ## Development
 
 ```bash
-# Install frontend dependencies
+# Install dependencies
 cd apps/frontend && bun install
 
-# Start frontend dev server
+# Start dev server
 bun run dev
-
-# Start worker dev server (from project root)
-bun run preview
 ```
 
 ## Build
 
 ```bash
-# Build everything
 bun run build
-
-# Build frontend only
-bun run build:frontend
-
-# Build worker only
-bun run build:worker
 ```
 
 ## Deployment
@@ -126,7 +107,7 @@ routes = [
 
 ## CI/CD
 
-GitHub Actions automatically deploys on push to `worker-main`. Set these repository secrets:
+GitHub Actions automatically deploys on push to `main`. Set these repository secrets:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`

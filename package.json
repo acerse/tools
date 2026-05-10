@@ -3,14 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "bun run dev:frontend",
-    "dev:frontend": "cd apps/frontend && bun run dev",
-    "dev:worker": "wrangler dev",
-    "build": "bun run build:frontend && bun run build:worker",
-    "build:frontend": "cd apps/frontend && bun run build",
-    "build:worker": "cd apps/worker && cargo install -q worker-build && worker-build --release",
+    "dev": "cd apps/frontend && bun run dev",
+    "build": "cd apps/frontend && bun run build",
     "deploy": "bun run build && wrangler deploy",
-    "preview": "bun run build:frontend && wrangler dev"
+    "preview": "bun run build && wrangler dev"
   },
   "devDependencies": {
     "wrangler": "^4.90.0"
