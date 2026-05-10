@@ -1,70 +1,70 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '../tools/types'
+import { CATEGORY_ORDER } from '../tools/types'
 import { tools } from '../tools/registry'
-
-const CATEGORY_ICONS: Record<string, string> = {
-  text: 'T',
-  developer: '</>',
-  utility: '*',
-}
+import { useI18n } from '../hooks/useI18n'
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const location = useLocation()
+  const { t, toolName, catName } = useI18n()
+
   const grouped = CATEGORY_ORDER.map(cat => ({
     category: cat,
-    label: CATEGORY_LABELS[cat],
+    label: catName(cat),
     items: tools.filter(t => t.category === cat),
   }))
 
   return (
     <>
       {open && (
-        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={onClose} />
+        <div className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden" onClick={onClose} />
       )}
       <aside
-        className={`fixed left-0 top-14 z-30 h-[calc(100vh-3.5rem)] w-64 border-r border-surface-800 bg-surface-950 transition-transform lg:translate-x-0 ${
+        className={`fixed left-0 top-16 z-30 h-[calc(100vh-4rem)] w-72 border-r border-surface-800/50 glass transition-transform duration-300 ease-out lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <nav className="h-full overflow-y-auto p-4">
+        <nav className="h-full overflow-y-auto p-4 space-y-1">
           <NavLink
             to="/"
             onClick={onClose}
-            className={`mb-4 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            className={`mb-5 flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
               location.pathname === '/'
-                ? 'bg-accent-600/10 text-accent-400'
-                : 'text-surface-400 hover:bg-surface-800 hover:text-surface-200'
+                ? 'bg-gradient-to-r from-indigo-500/15 to-violet-500/15 text-indigo-400 shadow-sm'
+                : 'text-surface-400 hover:bg-surface-800/50 hover:text-surface-200'
             }`}
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+            <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
             </svg>
-            All Tools
+            {t('app.home')}
           </NavLink>
 
           {grouped.map(({ category, label, items }) => (
-            <div key={category} className="mb-4">
-              <div className="mb-1.5 flex items-center gap-2 px-3 text-xs font-semibold uppercase tracking-wider text-surface-500">
-                <span className="font-mono text-[10px]">{CATEGORY_ICONS[category]}</span>
+            <div key={category} className="mb-5">
+              <div className="mb-2 px-4 text-[11px] font-bold uppercase tracking-widest text-surface-500">
                 {label}
               </div>
-              {items.map(tool => (
-                <NavLink
-                  key={tool.id}
-                  to={tool.route}
-                  onClick={onClose}
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors ${
-                      isActive
-                        ? 'bg-accent-600/10 text-accent-400'
-                        : 'text-surface-400 hover:bg-surface-800 hover:text-surface-200'
-                    }`
-                  }
-                >
-                  <span className="text-base">{tool.icon}</span>
-                  {tool.name}
-                </NavLink>
-              ))}
+              <div className="space-y-0.5">
+                {items.map(tool => (
+                  <NavLink
+                    key={tool.id}
+                    to={tool.route}
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 rounded-xl px-4 py-2 text-[13px] font-medium transition-all duration-200 ${
+                        isActive
+                          ? 'bg-gradient-to-r from-indigo-500/15 to-violet-500/15 text-indigo-400'
+                          : 'text-surface-400 hover:bg-surface-800/40 hover:text-surface-200'
+                      }`
+                    }
+                  >
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-surface-800/60 text-[10px] font-bold">
+                      {tool.icon}
+                    </span>
+                    {toolName(tool.id)}
+                  </NavLink>
+                ))}
+              </div>
             </div>
           ))}
         </nav>

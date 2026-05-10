@@ -7,23 +7,23 @@ export function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-surface-950">
-      <Header />
-      <div className="flex">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="fixed bottom-4 left-4 z-20 rounded-full bg-accent-600 p-3 text-white shadow-lg lg:hidden"
-        >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="min-h-[calc(100vh-3.5rem)] flex-1 lg:ml-64">
-          <div className="mx-auto max-w-4xl p-4 lg:p-8">
-            <Outlet />
-          </div>
-        </main>
+    <div className="relative min-h-screen bg-surface-950">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl animate-pulse-slow" />
+        <div className="absolute top-1/3 -left-40 h-96 w-96 rounded-full bg-violet-500/5 blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+        <div className="absolute -bottom-40 right-1/3 h-96 w-96 rounded-full bg-fuchsia-500/5 blur-3xl animate-pulse-slow" style={{ animationDelay: '4s' }} />
+      </div>
+
+      <div className="relative">
+        <Header onMenuToggle={() => setSidebarOpen(true)} />
+        <div className="flex">
+          <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          <main className="min-h-[calc(100vh-4rem)] flex-1 lg:ml-72">
+            <div className="mx-auto max-w-4xl p-4 lg:p-8">
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   )
