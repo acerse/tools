@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import DatePicker from '../../components/DatePicker';
 import { useI18n } from '../../hooks/useI18n';
 
 function getRelativeTime(date: Date): string {
@@ -186,12 +187,10 @@ export function TimestampConverter() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="tool-label">{t('Date')}</label>
-              <input
-                type="text"
-                className="tool-input"
-                placeholder="2026-05-10"
+              <DatePicker
                 value={dateInput}
-                onChange={(e) => setDateInput(e.target.value)}
+                onChange={setDateInput}
+                placeholder="YYYY-MM-DD"
               />
             </div>
             <div>
