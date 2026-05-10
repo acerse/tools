@@ -134,12 +134,13 @@ export function QRGenerator() {
               <img
                 src={qrDataUrl}
                 alt="Generated QR Code"
+                className="max-w-full"
                 style={{ width: size, height: size, imageRendering: 'pixelated' }}
               />
 
               <div className="flex gap-2 items-center">
                 <CopyButton text={text} />
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-surface-500">
                   {size}x{size}px | Error Correction: {errorCorrection}
                 </span>
               </div>

@@ -151,9 +151,9 @@ export function DuplicateRemover() {
           <OutputBox label="Result">
             <div className="flex items-center justify-between mb-3">
               <div className="flex gap-4 text-sm">
-                <span className="text-gray-500">Total: {totalLines}</span>
-                <span className="text-green-700 font-medium">Unique: {uniqueLines}</span>
-                <span className="text-red-700 font-medium">
+                <span className="text-surface-500">Total: {totalLines}</span>
+                <span className="text-green-400 font-medium">Unique: {uniqueLines}</span>
+                <span className="text-red-400 font-medium">
                   Removed: {duplicatesRemoved}
                 </span>
               </div>

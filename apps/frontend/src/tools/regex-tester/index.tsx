@@ -117,10 +117,10 @@ export function RegexTester() {
             {flagOptions.map((flag) => (
               <button
                 key={flag}
-                className={`px-3 py-1 rounded font-mono text-sm border ${
+                className={`px-3 py-1.5 rounded-lg font-mono text-sm border transition-all ${
                   flags.includes(flag)
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'bg-surface-900/50 text-surface-300 border-surface-600/50 hover:bg-surface-800'
                 }`}
                 onClick={() => toggleFlag(flag)}
               >
@@ -128,7 +128,7 @@ export function RegexTester() {
               </button>
             ))}
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-surface-500 mt-1">
             g = global, i = case-insensitive, m = multiline, s = dotAll
           </p>
         </div>
@@ -145,7 +145,7 @@ export function RegexTester() {
         </div>
 
         {error && (
-          <div className="card border-red-300 bg-red-50 text-red-700 p-4">
+          <div className="card error-box border-0 p-4">
             Invalid regex: {error}
           </div>
         )}
@@ -153,10 +153,10 @@ export function RegexTester() {
         {highlightedHtml && highlightedHtml.length > 0 && (
           <div className="card p-4 space-y-2">
             <h3 className="font-semibold text-lg">Highlighted Matches</h3>
-            <div className="font-mono text-sm whitespace-pre-wrap bg-gray-50 p-3 rounded border">
+            <div className="font-mono text-sm whitespace-pre-wrap bg-surface-900/50 p-3 rounded-xl border border-surface-700/50">
               {highlightedHtml.map((part, i) =>
                 part.highlighted ? (
-                  <mark key={i} className="bg-yellow-300 text-black px-0.5 rounded">
+                  <mark key={i} className="bg-yellow-500/30 text-yellow-300 px-0.5 rounded">
                     {part.text}
                   </mark>
                 ) : (
@@ -178,7 +178,7 @@ export function RegexTester() {
             {matches.length > 0 ? (
               <OutputBox content={matchDetailsText} />
             ) : (
-              <p className="text-gray-500">No matches found.</p>
+              <p className="text-surface-500">No matches found.</p>
             )}
           </div>
         )}

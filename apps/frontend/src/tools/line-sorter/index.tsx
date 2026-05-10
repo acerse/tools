@@ -134,7 +134,7 @@ export function LineSorter() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-surface-500 mt-1">
               {lines.length} non-empty line{lines.length !== 1 ? 's' : ''}
             </p>
           </div>
@@ -171,7 +171,7 @@ export function LineSorter() {
         <div className="mt-4">
           <OutputBox label="Sorted Output">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-surface-500">
                 {sortedLines.length} line{sortedLines.length !== 1 ? 's' : ''}
               </span>
               <CopyButton text={output} />

@@ -181,7 +181,7 @@ export function TimestampConverter() {
         {/* Date to Timestamp */}
         <div className="card p-4 space-y-4">
           <h3 className="font-semibold text-lg">Date to Unix Timestamp</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="tool-label">Date</label>
               <input
@@ -218,7 +218,7 @@ export function TimestampConverter() {
         </div>
 
         {error && (
-          <div className="card border-red-300 bg-red-50 text-red-700 p-4">
+          <div className="card error-box border-0 p-4">
             {error}
           </div>
         )}

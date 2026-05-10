@@ -112,7 +112,7 @@ export function JsonFormatter() {
       </div>
 
       {error && (
-        <div className="card mt-4 border-red-400 bg-red-50 text-red-700">
+        <div className="card mt-4 error-box border-0">
           <p className="font-medium">Error</p>
           <p className="mt-1 text-sm">{error}</p>
         </div>

@@ -85,7 +85,7 @@ export function PasswordGenerator() {
               onChange={(e) => setLength(parseInt(e.target.value, 10))}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-surface-500 mt-1">
               <span>8</span>
               <span>128</span>
             </div>
@@ -120,7 +120,7 @@ export function PasswordGenerator() {
                 type="checkbox"
                 checked={useLowercase}
                 onChange={(e) => setUseLowercase(e.target.checked)}
-                className="rounded border-gray-300"
+                className="rounded border-surface-600"
               />
               <span className="text-sm">Lowercase (a-z)</span>
             </label>
@@ -130,7 +130,7 @@ export function PasswordGenerator() {
                 type="checkbox"
                 checked={useUppercase}
                 onChange={(e) => setUseUppercase(e.target.checked)}
-                className="rounded border-gray-300"
+                className="rounded border-surface-600"
               />
               <span className="text-sm">Uppercase (A-Z)</span>
             </label>
@@ -140,7 +140,7 @@ export function PasswordGenerator() {
                 type="checkbox"
                 checked={useNumbers}
                 onChange={(e) => setUseNumbers(e.target.checked)}
-                className="rounded border-gray-300"
+                className="rounded border-surface-600"
               />
               <span className="text-sm">Numbers (0-9)</span>
             </label>
@@ -150,7 +150,7 @@ export function PasswordGenerator() {
                 type="checkbox"
                 checked={useSymbols}
                 onChange={(e) => setUseSymbols(e.target.checked)}
-                className="rounded border-gray-300"
+                className="rounded border-surface-600"
               />
               <span className="text-sm">Symbols (!@#$...)</span>
             </label>
@@ -165,7 +165,7 @@ export function PasswordGenerator() {
       </div>
 
       {error && (
-        <div className="card mt-4 border-red-400 bg-red-50 text-red-700">
+        <div className="card mt-4 error-box border-0">
           <p className="font-medium">Error</p>
           <p className="mt-1 text-sm">{error}</p>
         </div>
@@ -182,13 +182,13 @@ export function PasswordGenerator() {
           {strength && (
             <div className="card mt-4">
               <label className="tool-label">Strength</label>
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-surface-700 rounded-full h-3 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-300 ${strength.color} ${strength.width}`}
                 />
               </div>
               <p className="mt-2 text-sm font-medium">{strength.level}</p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-surface-500 mt-1">
                 Character pool: {charset.length} characters | Entropy: ~{Math.round(password.length * Math.log2(charset.length))} bits
               </p>
             </div>

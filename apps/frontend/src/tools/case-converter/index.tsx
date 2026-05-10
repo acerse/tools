@@ -127,7 +127,7 @@ export function CaseConverter() {
                     <label className="tool-label">{result.name}</label>
                     <CopyButton text={result.value} />
                   </div>
-                  <div className="tool-input bg-gray-50 break-all">{result.value}</div>
+                  <div className="tool-input bg-surface-900/50 break-all">{result.value}</div>
                 </div>
               ))}
             </div>

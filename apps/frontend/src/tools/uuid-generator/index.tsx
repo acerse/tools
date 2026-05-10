@@ -50,7 +50,7 @@ export function UuidGenerator() {
               type="checkbox"
               checked={uppercase}
               onChange={(e) => setUppercase(e.target.checked)}
-              className="rounded border-gray-300"
+              className="rounded border-surface-600"
             />
             <label className="tool-label mb-0 cursor-pointer" htmlFor="uuid-uppercase">
               Uppercase

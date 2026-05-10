@@ -87,11 +87,11 @@ const STATUS_CODES: StatusCode[] = [
 const CATEGORIES = ['1xx Informational', '2xx Success', '3xx Redirection', '4xx Client Error', '5xx Server Error'];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  '1xx Informational': 'bg-blue-100 text-blue-800 border-blue-200',
-  '2xx Success': 'bg-green-100 text-green-800 border-green-200',
-  '3xx Redirection': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  '4xx Client Error': 'bg-orange-100 text-orange-800 border-orange-200',
-  '5xx Server Error': 'bg-red-100 text-red-800 border-red-200',
+  '1xx Informational': 'badge-blue',
+  '2xx Success': 'badge-green',
+  '3xx Redirection': 'badge-yellow',
+  '4xx Client Error': 'badge-orange',
+  '5xx Server Error': 'badge-red',
 };
 
 export function HttpStatus() {
@@ -155,8 +155,8 @@ export function HttpStatus() {
             <button
               className={`px-3 py-1 rounded text-sm border ${
                 selectedCategory === 'all'
-                  ? 'bg-gray-800 text-white border-gray-800'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  ? 'bg-surface-800 text-white border-surface-700'
+                  : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
               }`}
               onClick={() => setSelectedCategory('all')}
             >
@@ -167,8 +167,8 @@ export function HttpStatus() {
                 key={cat}
                 className={`px-3 py-1 rounded text-sm border ${
                   selectedCategory === cat
-                    ? 'bg-gray-800 text-white border-gray-800'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? 'bg-surface-800 text-white border-surface-700'
+                    : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
                 }`}
                 onClick={() => setSelectedCategory(cat)}
               >
@@ -210,7 +210,7 @@ export function HttpStatus() {
                       <span className="font-mono font-bold text-lg min-w-[3rem]">{sc.code}</span>
                       <div className="flex-1">
                         <p className="font-medium">{sc.name}</p>
-                        <p className="text-sm text-gray-600 mt-1">{sc.description}</p>
+                        <p className="text-sm text-surface-400 mt-1">{sc.description}</p>
                       </div>
                     </div>
                   </div>
@@ -220,7 +220,7 @@ export function HttpStatus() {
           ))}
 
           {filteredCodes.length === 0 && (
-            <div className="card p-4 text-center text-gray-500">
+            <div className="card p-4 text-center text-surface-500">
               No status codes match your search.
             </div>
           )}

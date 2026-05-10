@@ -56,7 +56,7 @@ export function Sha256Generator() {
             onChange={(e) => setInput(e.target.value)}
           />
           {input && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-surface-500 mt-1">
               {input.length} character{input.length !== 1 ? 's' : ''} | {new TextEncoder().encode(input).length} bytes
             </p>
           )}
@@ -72,7 +72,7 @@ export function Sha256Generator() {
         </div>
 
         {error && (
-          <div className="card border-red-300 bg-red-50 text-red-700 p-4">
+          <div className="card error-box border-0 p-4">
             {error}
           </div>
         )}
@@ -84,7 +84,7 @@ export function Sha256Generator() {
               <CopyButton text={hash} />
             </div>
             <OutputBox content={hash} />
-            <p className="text-xs text-gray-500">{hash.length * 4} bits / {hash.length / 2} bytes</p>
+            <p className="text-xs text-surface-500">{hash.length * 4} bits / {hash.length / 2} bytes</p>
           </div>
         )}
       </div>

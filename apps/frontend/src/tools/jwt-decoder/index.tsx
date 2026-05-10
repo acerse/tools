@@ -109,7 +109,7 @@ export function JwtDecoder() {
         </div>
 
         {error && (
-          <div className="card border-red-300 bg-red-50 text-red-700 p-4">
+          <div className="card error-box border-0 p-4">
             {error}
           </div>
         )}

@@ -108,8 +108,8 @@ export function DiffChecker() {
 
   const lineStyles: Record<DiffLineType, string> = {
     same: '',
-    added: 'bg-green-100 text-green-900',
-    removed: 'bg-red-100 text-red-900',
+    added: 'bg-green-500/15 text-green-400',
+    removed: 'bg-red-500/15 text-red-400',
   };
 
   const linePrefix: Record<DiffLineType, string> = {
@@ -164,23 +164,23 @@ export function DiffChecker() {
           <OutputBox label="Diff Output">
             <div className="flex items-center justify-between mb-3">
               <div className="flex gap-4 text-sm">
-                <span className="text-green-700 font-medium">+{stats.added} added</span>
-                <span className="text-red-700 font-medium">-{stats.removed} removed</span>
-                <span className="text-gray-500">{stats.unchanged} unchanged</span>
+                <span className="text-green-400 font-medium">+{stats.added} added</span>
+                <span className="text-red-400 font-medium">-{stats.removed} removed</span>
+                <span className="text-surface-500">{stats.unchanged} unchanged</span>
               </div>
               <CopyButton text={diffText} />
             </div>
 
-            <div className="border rounded overflow-auto font-mono text-sm">
+            <div className="border border-surface-700/50 rounded-xl overflow-auto font-mono text-sm">
               {diff.map((line, idx) => (
                 <div key={idx} className={`flex ${lineStyles[line.type]}`}>
-                  <div className="w-12 text-right pr-2 text-gray-400 select-none border-r shrink-0 py-0.5">
+                  <div className="w-12 text-right pr-2 text-surface-500 select-none border-r border-surface-700/50 shrink-0 py-0.5">
                     {line.oldLineNum ?? ''}
                   </div>
-                  <div className="w-12 text-right pr-2 text-gray-400 select-none border-r shrink-0 py-0.5">
+                  <div className="w-12 text-right pr-2 text-surface-500 select-none border-r border-surface-700/50 shrink-0 py-0.5">
                     {line.newLineNum ?? ''}
                   </div>
-                  <div className="w-6 text-center text-gray-500 select-none shrink-0 py-0.5">
+                  <div className="w-6 text-center text-surface-500 select-none shrink-0 py-0.5">
                     {linePrefix[line.type]}
                   </div>
                   <div className="flex-1 whitespace-pre-wrap break-all py-0.5 px-1">
@@ -195,7 +195,7 @@ export function DiffChecker() {
 
       {showDiff && diff.length === 0 && (
         <div className="card mt-4">
-          <p className="text-gray-500 text-center">Both texts are identical.</p>
+          <p className="text-surface-500 text-center">Both texts are identical.</p>
         </div>
       )}
     </ToolLayout>
