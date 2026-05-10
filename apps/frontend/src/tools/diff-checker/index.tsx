@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 type DiffLineType = 'same' | 'added' | 'removed';
 
@@ -73,6 +74,7 @@ function getDiffStats(diff: DiffLine[]) {
 }
 
 export function DiffChecker() {
+  const { t } = useI18n();
   const [original, setOriginal] = useState('');
   const [modified, setModified] = useState('');
   const [showDiff, setShowDiff] = useState(false);
@@ -119,14 +121,14 @@ export function DiffChecker() {
   };
 
   return (
-    <ToolLayout title="Diff Checker" description="Compare two texts and see the differences">
+    <ToolLayout title={t('Diff Checker')} description={t('Compare two texts and see the differences')}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="card">
-          <label className="tool-label">Original Text</label>
+          <label className="tool-label">{t('Original Text')}</label>
           <textarea
             className="tool-textarea font-mono"
             rows={12}
-            placeholder="Paste original text here..."
+            placeholder={t('Paste original text here...')}
             value={original}
             onChange={(e) => {
               setOriginal(e.target.value);
@@ -136,11 +138,11 @@ export function DiffChecker() {
         </div>
 
         <div className="card">
-          <label className="tool-label">Modified Text</label>
+          <label className="tool-label">{t('Modified Text')}</label>
           <textarea
             className="tool-textarea font-mono"
             rows={12}
-            placeholder="Paste modified text here..."
+            placeholder={t('Paste modified text here...')}
             value={modified}
             onChange={(e) => {
               setModified(e.target.value);
@@ -152,21 +154,21 @@ export function DiffChecker() {
 
       <div className="flex gap-2 mt-4">
         <button className="btn-primary" onClick={handleCompare}>
-          Compare
+          {t('Compare')}
         </button>
         <button className="btn-secondary" onClick={handleClear}>
-          Clear
+          {t('Clear')}
         </button>
       </div>
 
       {showDiff && diff.length > 0 && (
         <div className="mt-4">
-          <OutputBox label="Diff Output">
+          <OutputBox label={t('Diff Output')}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex gap-4 text-sm">
-                <span className="text-green-400 font-medium">+{stats.added} added</span>
-                <span className="text-red-400 font-medium">-{stats.removed} removed</span>
-                <span className="text-surface-500">{stats.unchanged} unchanged</span>
+                <span className="text-green-400 font-medium">+{stats.added} {t('added')}</span>
+                <span className="text-red-400 font-medium">-{stats.removed} {t('removed')}</span>
+                <span className="text-surface-500">{stats.unchanged} {t('unchanged')}</span>
               </div>
               <CopyButton text={diffText} />
             </div>
@@ -195,7 +197,7 @@ export function DiffChecker() {
 
       {showDiff && diff.length === 0 && (
         <div className="card mt-4">
-          <p className="text-surface-500 text-center">Both texts are identical.</p>
+          <p className="text-surface-500 text-center">{t('Both texts are identical.')}</p>
         </div>
       )}
     </ToolLayout>

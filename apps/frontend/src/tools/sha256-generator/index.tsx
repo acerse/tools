@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 async function generateSha256(text: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -12,6 +13,7 @@ async function generateSha256(text: string): Promise<string> {
 }
 
 export function Sha256Generator() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
   const [hash, setHash] = useState('');
   const [error, setError] = useState('');
@@ -44,47 +46,49 @@ export function Sha256Generator() {
   };
 
   return (
-    <ToolLayout title="SHA-256 Hash Generator" description="Generate SHA-256 hashes from text using the Web Crypto API">
+    <ToolLayout title={t('SHA-256 Hash Generator')} description={t('Generate SHA-256 hashes from text using the Web Crypto API')}>
       <div className="space-y-4">
-        <div>
-          <label className="tool-label">Input Text</label>
-          <textarea
-            className="tool-textarea"
-            rows={6}
-            placeholder="Enter text to hash..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          {input && (
-            <p className="text-xs text-surface-500 mt-1">
-              {input.length} character{input.length !== 1 ? 's' : ''} | {new TextEncoder().encode(input).length} bytes
-            </p>
-          )}
-        </div>
+        <div className="card">
+          <div>
+            <label className="tool-label">{t('Input Text')}</label>
+            <textarea
+              className="tool-textarea"
+              rows={6}
+              placeholder={t('Enter text to hash...')}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            {input && (
+              <p className="text-xs text-surface-500 mt-1">
+                {input.length} {input.length !== 1 ? t('characters') : t('character')} | {new TextEncoder().encode(input).length} {t('bytes')}
+              </p>
+            )}
+          </div>
 
-        <div className="flex gap-2">
-          <button className="btn-primary" onClick={generate} disabled={isGenerating}>
-            {isGenerating ? 'Generating...' : 'Generate Hash'}
-          </button>
-          <button className="btn-secondary" onClick={clear}>
-            Clear
-          </button>
+          <div className="flex gap-2 mt-4">
+            <button className="btn-primary" onClick={generate} disabled={isGenerating}>
+              {isGenerating ? t('Generating...') : t('Generate Hash')}
+            </button>
+            <button className="btn-secondary" onClick={clear}>
+              {t('Clear')}
+            </button>
+          </div>
         </div>
 
         {error && (
-          <div className="card error-box border-0 p-4">
-            {error}
+          <div className="error-box">
+            {t(error)}
           </div>
         )}
 
         {hash && (
           <div className="card p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">SHA-256 Hash (Hex)</h3>
+              <label className="tool-label">{t('SHA-256 Hash (Hex)')}</label>
               <CopyButton text={hash} />
             </div>
             <OutputBox content={hash} />
-            <p className="text-xs text-surface-500">{hash.length * 4} bits / {hash.length / 2} bytes</p>
+            <p className="text-xs text-surface-500">{hash.length * 4} {t('bits')} / {hash.length / 2} {t('bytes')}</p>
           </div>
         )}
       </div>

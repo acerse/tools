@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 interface StatusCode {
   code: number;
@@ -95,6 +96,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export function HttpStatus() {
+  const { t } = useI18n();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -136,54 +138,56 @@ export function HttpStatus() {
     : '';
 
   return (
-    <ToolLayout title="HTTP Status Code Lookup" description="Look up HTTP status codes with descriptions and use cases">
+    <ToolLayout title={t('HTTP Status Code Lookup')} description={t('Look up HTTP status codes with descriptions and use cases')}>
       <div className="space-y-4">
-        <div>
-          <label className="tool-label">Search by Code or Keyword</label>
-          <input
-            type="text"
-            className="tool-input"
-            placeholder="Enter status code (e.g. 404) or keyword (e.g. not found)"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        <div className="card">
+          <div>
+            <label className="tool-label">{t('Search by Code or Keyword')}</label>
+            <input
+              type="text"
+              className="tool-input"
+              placeholder={t('Enter status code (e.g. 404) or keyword (e.g. not found)')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-        <div>
-          <label className="tool-label">Filter by Category</label>
-          <div className="flex flex-wrap gap-2">
-            <button
-              className={`px-3 py-1 rounded text-sm border ${
-                selectedCategory === 'all'
-                  ? 'bg-surface-800 text-white border-surface-700'
-                  : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
-              }`}
-              onClick={() => setSelectedCategory('all')}
-            >
-              All
-            </button>
-            {CATEGORIES.map((cat) => (
+          <div className="mt-4">
+            <label className="tool-label">{t('Filter by Category')}</label>
+            <div className="flex flex-wrap gap-2">
               <button
-                key={cat}
                 className={`px-3 py-1 rounded text-sm border ${
-                  selectedCategory === cat
+                  selectedCategory === 'all'
                     ? 'bg-surface-800 text-white border-surface-700'
                     : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
                 }`}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => setSelectedCategory('all')}
               >
-                {cat}
+                {t('All')}
               </button>
-            ))}
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  className={`px-3 py-1 rounded text-sm border ${
+                    selectedCategory === cat
+                      ? 'bg-surface-800 text-white border-surface-700'
+                      : 'bg-surface-900 text-surface-300 border-surface-600 hover:bg-surface-900/50'
+                  }`}
+                  onClick={() => setSelectedCategory(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
         {selectedStatus && (
           <div className={`card p-4 space-y-2 border ${CATEGORY_COLORS[selectedStatus.category]}`}>
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">
+              <label className="tool-label">
                 {selectedStatus.code} {selectedStatus.name}
-              </h3>
+              </label>
               <CopyButton text={detailText} />
             </div>
             <span className="inline-block px-2 py-0.5 rounded text-xs font-medium border">
@@ -193,10 +197,10 @@ export function HttpStatus() {
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {Object.entries(groupedCodes).map(([category, codes]) => (
             <div key={category}>
-              <h3 className={`font-semibold text-md mb-2 px-2 py-1 rounded inline-block ${CATEGORY_COLORS[category]}`}>
+              <h3 className={`font-semibold text-sm mb-2 px-2 py-1 rounded inline-block ${CATEGORY_COLORS[category]}`}>
                 {category} ({codes.length})
               </h3>
               <div className="space-y-2">
@@ -221,7 +225,7 @@ export function HttpStatus() {
 
           {filteredCodes.length === 0 && (
             <div className="card p-4 text-center text-surface-500">
-              No status codes match your search.
+              {t('No status codes match your search.')}
             </div>
           )}
         </div>

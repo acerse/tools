@@ -2,10 +2,12 @@ import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 type KeepOccurrence = 'first' | 'last';
 
 export function DuplicateRemover() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
   const [caseSensitive, setCaseSensitive] = useState(true);
   const [trimWhitespace, setTrimWhitespace] = useState(false);
@@ -66,17 +68,17 @@ export function DuplicateRemover() {
 
   return (
     <ToolLayout
-      title="Duplicate Line Remover"
-      description="Remove duplicate lines from text"
+      title={t('Duplicate Line Remover')}
+      description={t('Remove duplicate lines from text')}
     >
       <div className="card">
         <div className="space-y-4">
           <div>
-            <label className="tool-label">Input Text</label>
+            <label className="tool-label">{t('Input Text')}</label>
             <textarea
               className="tool-textarea font-mono"
               rows={10}
-              placeholder="Paste text with duplicate lines..."
+              placeholder={t('Paste text with duplicate lines...')}
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
@@ -84,55 +86,55 @@ export function DuplicateRemover() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="tool-label">Case Sensitivity</label>
+              <label className="tool-label">{t('Case Sensitivity')}</label>
               <div className="flex gap-2">
                 <button
                   className={caseSensitive ? 'btn-primary' : 'btn-secondary'}
                   onClick={() => setCaseSensitive(true)}
                 >
-                  Case Sensitive
+                  {t('Case Sensitive')}
                 </button>
                 <button
                   className={!caseSensitive ? 'btn-primary' : 'btn-secondary'}
                   onClick={() => setCaseSensitive(false)}
                 >
-                  Case Insensitive
+                  {t('Case Insensitive')}
                 </button>
               </div>
             </div>
 
             <div>
-              <label className="tool-label">Whitespace</label>
+              <label className="tool-label">{t('Whitespace')}</label>
               <div className="flex gap-2">
                 <button
                   className={trimWhitespace ? 'btn-primary' : 'btn-secondary'}
                   onClick={() => setTrimWhitespace(true)}
                 >
-                  Trim
+                  {t('Trim')}
                 </button>
                 <button
                   className={!trimWhitespace ? 'btn-primary' : 'btn-secondary'}
                   onClick={() => setTrimWhitespace(false)}
                 >
-                  Keep
+                  {t('Keep')}
                 </button>
               </div>
             </div>
 
             <div>
-              <label className="tool-label">Keep Occurrence</label>
+              <label className="tool-label">{t('Keep Occurrence')}</label>
               <div className="flex gap-2">
                 <button
                   className={keepOccurrence === 'first' ? 'btn-primary' : 'btn-secondary'}
                   onClick={() => setKeepOccurrence('first')}
                 >
-                  First
+                  {t('First')}
                 </button>
                 <button
                   className={keepOccurrence === 'last' ? 'btn-primary' : 'btn-secondary'}
                   onClick={() => setKeepOccurrence('last')}
                 >
-                  Last
+                  {t('Last')}
                 </button>
               </div>
             </div>
@@ -140,7 +142,7 @@ export function DuplicateRemover() {
 
           <div className="flex gap-2">
             <button className="btn-secondary" onClick={handleClear}>
-              Clear
+              {t('Clear')}
             </button>
           </div>
         </div>
@@ -148,13 +150,13 @@ export function DuplicateRemover() {
 
       {input.trim() && (
         <div className="mt-4">
-          <OutputBox label="Result">
+          <OutputBox label={t('Result')}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex gap-4 text-sm">
-                <span className="text-surface-500">Total: {totalLines}</span>
-                <span className="text-green-400 font-medium">Unique: {uniqueLines}</span>
+                <span className="text-surface-500">{t('Total')}: {totalLines}</span>
+                <span className="text-green-400 font-medium">{t('Unique')}: {uniqueLines}</span>
                 <span className="text-red-400 font-medium">
-                  Removed: {duplicatesRemoved}
+                  {t('Removed')}: {duplicatesRemoved}
                 </span>
               </div>
               <CopyButton text={output} />

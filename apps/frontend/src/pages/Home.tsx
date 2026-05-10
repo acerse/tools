@@ -9,7 +9,7 @@ export function Home() {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<ToolCategory | 'all'>('all')
   const inputRef = useRef<HTMLInputElement>(null)
-  const { t, toolName, toolDesc, catName } = useI18n()
+  const { tk, toolName, toolDesc, catName } = useI18n()
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -47,7 +47,7 @@ export function Home() {
   }, [filtered, catName])
 
   const categories: { key: ToolCategory | 'all'; label: string }[] = [
-    { key: 'all', label: t('app.all') },
+    { key: 'all', label: tk('app.all') },
     ...CATEGORY_ORDER.map(cat => ({ key: cat, label: catName(cat) })),
   ]
 
@@ -59,10 +59,10 @@ export function Home() {
           17 tools available
         </div>
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          <span className="gradient-text">{t('app.title')}</span>
+          <span className="gradient-text">{tk('app.title')}</span>
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base text-surface-400 leading-relaxed">
-          {t('app.subtitle')}
+          {tk('app.subtitle')}
         </p>
       </div>
 
@@ -75,7 +75,7 @@ export function Home() {
           <input
             ref={inputRef}
             type="text"
-            placeholder={t('app.search')}
+            placeholder={tk('app.search')}
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full rounded-2xl border border-surface-700/50 bg-surface-900/60 backdrop-blur-xl pl-12 pr-4 py-4 text-sm text-surface-100 placeholder-surface-500 transition-all focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 focus:bg-surface-900/80"
@@ -109,7 +109,7 @@ export function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>
-          <p className="text-surface-500">{t('app.noResults')} "{search}"</p>
+          <p className="text-surface-500">{tk('app.noResults')} "{search}"</p>
         </div>
       )}
 

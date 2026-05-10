@@ -2,10 +2,13 @@ import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import Select from '../../components/Select';
+import { useI18n } from '../../hooks/useI18n';
 
 type IndentType = '2' | '4' | 'tab';
 
 export function JsonFormatter() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
@@ -26,14 +29,14 @@ export function JsonFormatter() {
     setError('');
     setOutput('');
     if (!input.trim()) {
-      setError('Please enter some JSON to format.');
+      setError(t('Please enter some JSON to format.'));
       return;
     }
     try {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed, null, getIndent()));
     } catch (e) {
-      setError(`Invalid JSON: ${(e as Error).message}`);
+      setError(`${t('Invalid JSON')}: ${(e as Error).message}`);
     }
   };
 
@@ -41,14 +44,14 @@ export function JsonFormatter() {
     setError('');
     setOutput('');
     if (!input.trim()) {
-      setError('Please enter some JSON to minify.');
+      setError(t('Please enter some JSON to minify.'));
       return;
     }
     try {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed));
     } catch (e) {
-      setError(`Invalid JSON: ${(e as Error).message}`);
+      setError(`${t('Invalid JSON')}: ${(e as Error).message}`);
     }
   };
 
@@ -56,22 +59,22 @@ export function JsonFormatter() {
     setError('');
     setOutput('');
     if (!input.trim()) {
-      setError('Please enter some JSON to validate.');
+      setError(t('Please enter some JSON to validate.'));
       return;
     }
     try {
       JSON.parse(input);
-      setOutput('Valid JSON');
+      setOutput(t('Valid JSON'));
     } catch (e) {
-      setError(`Invalid JSON: ${(e as Error).message}`);
+      setError(`${t('Invalid JSON')}: ${(e as Error).message}`);
     }
   };
 
   return (
-    <ToolLayout title="JSON Formatter & Validator" description="Format, minify, and validate JSON data.">
+    <ToolLayout title={t('JSON Formatter & Validator')} description={t('Format, minify, and validate JSON data.')}>
       <div className="card">
         <label className="tool-label" htmlFor="json-input">
-          JSON Input
+          {t('JSON Input')}
         </label>
         <textarea
           id="json-input"
@@ -85,35 +88,34 @@ export function JsonFormatter() {
         <div className="flex flex-wrap items-center gap-3 mt-4">
           <div className="flex items-center gap-2">
             <label className="tool-label mb-0" htmlFor="indent-select">
-              Indentation
+              {t('Indentation')}
             </label>
-            <select
-              id="indent-select"
-              className="tool-input w-auto"
+            <Select
               value={indent}
-              onChange={(e) => setIndent(e.target.value as IndentType)}
-            >
-              <option value="2">2 Spaces</option>
-              <option value="4">4 Spaces</option>
-              <option value="tab">Tabs</option>
-            </select>
+              onChange={(val) => setIndent(val as IndentType)}
+              options={[
+                { value: '2', label: t('2 Spaces') },
+                { value: '4', label: t('4 Spaces') },
+                { value: 'tab', label: t('Tabs') },
+              ]}
+            />
           </div>
 
           <button className="btn-primary" onClick={handleFormat}>
-            Format
+            {t('Format')}
           </button>
           <button className="btn-secondary" onClick={handleMinify}>
-            Minify
+            {t('Minify')}
           </button>
           <button className="btn-secondary" onClick={handleValidate}>
-            Validate
+            {t('Validate')}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="card mt-4 error-box border-0">
-          <p className="font-medium">Error</p>
+        <div className="error-box mt-4">
+          <p className="font-medium">{t('Error')}</p>
           <p className="mt-1 text-sm">{error}</p>
         </div>
       )}
@@ -121,7 +123,7 @@ export function JsonFormatter() {
       {output && (
         <div className="mt-4">
           <div className="flex items-center justify-between mb-2">
-            <label className="tool-label mb-0">Output</label>
+            <label className="tool-label mb-0">{t('Output')}</label>
             <CopyButton text={output} />
           </div>
           <OutputBox content={output} />

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { useI18n } from '../hooks/useI18n'
 
 interface ToolLayoutProps {
   title: string
@@ -8,6 +9,8 @@ interface ToolLayoutProps {
 }
 
 export default function ToolLayout({ title, description, children }: ToolLayoutProps) {
+  const { t } = useI18n()
+
   return (
     <div>
       <div className="mb-8">
@@ -18,7 +21,7 @@ export default function ToolLayout({ title, description, children }: ToolLayoutP
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Back
+          {t('Back')}
         </Link>
         <h1 className="text-2xl font-extrabold tracking-tight text-surface-100 sm:text-3xl">
           {title}

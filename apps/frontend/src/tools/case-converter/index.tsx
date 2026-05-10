@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 function splitWords(str: string): string[] {
   return str
@@ -92,6 +93,7 @@ const conversions: Conversion[] = [
 ];
 
 export function CaseConverter() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
 
   const results = useMemo(() => {
@@ -103,14 +105,14 @@ export function CaseConverter() {
   }, [input]);
 
   return (
-    <ToolLayout title="Case Converter" description="Convert text between different casing styles">
+    <ToolLayout title={t('Case Converter')} description={t('Convert text between different casing styles')}>
       <div className="card">
         <div>
-          <label className="tool-label">Input Text</label>
+          <label className="tool-label">{t('Input Text')}</label>
           <textarea
             className="tool-textarea"
             rows={4}
-            placeholder="Enter text to convert (e.g., hello world, helloWorld, hello_world)..."
+            placeholder={t('Enter text to convert (e.g., hello world, helloWorld, hello_world)...')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
@@ -119,7 +121,7 @@ export function CaseConverter() {
 
       {results.length > 0 && (
         <div className="mt-4">
-          <OutputBox label="All Conversions">
+          <OutputBox label={t('All Conversions')}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {results.map((result) => (
                 <div key={result.name} className="card">

@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 type SortMode =
   | 'az'
@@ -12,22 +13,6 @@ type SortMode =
   | 'natural'
   | 'reverse'
   | 'random';
-
-interface SortOption {
-  value: SortMode;
-  label: string;
-}
-
-const sortOptions: SortOption[] = [
-  { value: 'az', label: 'Alphabetical (A-Z)' },
-  { value: 'za', label: 'Alphabetical (Z-A)' },
-  { value: 'short-long', label: 'By Length (Short to Long)' },
-  { value: 'long-short', label: 'By Length (Long to Short)' },
-  { value: 'numeric', label: 'Numeric' },
-  { value: 'natural', label: 'Natural Sort' },
-  { value: 'reverse', label: 'Reverse Order' },
-  { value: 'random', label: 'Random Shuffle' },
-];
 
 function naturalCompare(a: string, b: string): number {
   const ax: (string | number)[] = [];
@@ -98,9 +83,21 @@ function sortLines(lines: string[], mode: SortMode): string[] {
 }
 
 export function LineSorter() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>('az');
   const [shuffleKey, setShuffleKey] = useState(0);
+
+  const sortOptions = [
+    { value: 'az' as SortMode, label: t('Alphabetical (A-Z)') },
+    { value: 'za' as SortMode, label: t('Alphabetical (Z-A)') },
+    { value: 'short-long' as SortMode, label: t('By Length (Short to Long)') },
+    { value: 'long-short' as SortMode, label: t('By Length (Long to Short)') },
+    { value: 'numeric' as SortMode, label: t('Numeric') },
+    { value: 'natural' as SortMode, label: t('Natural Sort') },
+    { value: 'reverse' as SortMode, label: t('Reverse Order') },
+    { value: 'random' as SortMode, label: t('Random Shuffle') },
+  ];
 
   const lines = useMemo(() => {
     return input.split('\n').filter((line) => line.trim().length > 0);
@@ -122,25 +119,25 @@ export function LineSorter() {
   }, [sortMode]);
 
   return (
-    <ToolLayout title="Line Sorter" description="Sort lines of text in various ways">
+    <ToolLayout title={t('Line Sorter')} description={t('Sort lines of text in various ways')}>
       <div className="card">
         <div className="space-y-4">
           <div>
-            <label className="tool-label">Input Text</label>
+            <label className="tool-label">{t('Input Text')}</label>
             <textarea
               className="tool-textarea font-mono"
               rows={10}
-              placeholder="Enter lines of text to sort (one item per line)..."
+              placeholder={t('Enter lines of text to sort (one item per line)...')}
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
             <p className="text-sm text-surface-500 mt-1">
-              {lines.length} non-empty line{lines.length !== 1 ? 's' : ''}
+              {lines.length} {t('non-empty line')}{lines.length !== 1 ? t('s') : ''}
             </p>
           </div>
 
           <div>
-            <label className="tool-label">Sort Mode</label>
+            <label className="tool-label">{t('Sort Mode')}</label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {sortOptions.map((opt) => (
                 <button
@@ -161,7 +158,7 @@ export function LineSorter() {
 
           {sortMode === 'random' && (
             <button className="btn-secondary" onClick={handleSort}>
-              Re-shuffle
+              {t('Re-shuffle')}
             </button>
           )}
         </div>
@@ -169,10 +166,10 @@ export function LineSorter() {
 
       {sortedLines.length > 0 && (
         <div className="mt-4">
-          <OutputBox label="Sorted Output">
+          <OutputBox label={t('Sorted Output')}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-surface-500">
-                {sortedLines.length} line{sortedLines.length !== 1 ? 's' : ''}
+                {sortedLines.length} {t('line')}{sortedLines.length !== 1 ? t('s') : ''}
               </span>
               <CopyButton text={output} />
             </div>

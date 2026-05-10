@@ -2,6 +2,8 @@ import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import Checkbox from '../../components/Checkbox';
+import { useI18n } from '../../hooks/useI18n';
 
 const CHAR_SETS = {
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
@@ -36,6 +38,7 @@ function generateSecurePassword(length: number, charset: string): string {
 }
 
 export function PasswordGenerator() {
+  const { t } = useI18n();
   const [length, setLength] = useState(16);
   const [useLowercase, setUseLowercase] = useState(true);
   const [useUppercase, setUseUppercase] = useState(true);
@@ -57,7 +60,7 @@ export function PasswordGenerator() {
     setError('');
     const charset = buildCharset();
     if (!charset) {
-      setError('Please select at least one character type.');
+      setError(t('Please select at least one character type.'));
       setPassword('');
       return;
     }
@@ -69,12 +72,12 @@ export function PasswordGenerator() {
   const strength = password ? calculateStrength(password, charset.length) : null;
 
   return (
-    <ToolLayout title="Password Generator" description="Generate strong, cryptographically random passwords.">
+    <ToolLayout title={t('Password Generator')} description={t('Generate strong, cryptographically random passwords.')}>
       <div className="card">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="tool-label" htmlFor="pw-length">
-              Length ({length})
+              {t('Length')} ({length})
             </label>
             <input
               id="pw-length"
@@ -93,7 +96,7 @@ export function PasswordGenerator() {
 
           <div>
             <label className="tool-label" htmlFor="pw-length-input">
-              Exact Length
+              {t('Exact Length')}
             </label>
             <input
               id="pw-length-input"
@@ -113,60 +116,25 @@ export function PasswordGenerator() {
         </div>
 
         <div className="mt-4">
-          <label className="tool-label">Character Types</label>
+          <label className="tool-label">{t('Character Types')}</label>
           <div className="flex flex-wrap gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={useLowercase}
-                onChange={(e) => setUseLowercase(e.target.checked)}
-                className="rounded border-surface-600"
-              />
-              <span className="text-sm">Lowercase (a-z)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={useUppercase}
-                onChange={(e) => setUseUppercase(e.target.checked)}
-                className="rounded border-surface-600"
-              />
-              <span className="text-sm">Uppercase (A-Z)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={useNumbers}
-                onChange={(e) => setUseNumbers(e.target.checked)}
-                className="rounded border-surface-600"
-              />
-              <span className="text-sm">Numbers (0-9)</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={useSymbols}
-                onChange={(e) => setUseSymbols(e.target.checked)}
-                className="rounded border-surface-600"
-              />
-              <span className="text-sm">Symbols (!@#$...)</span>
-            </label>
+            <Checkbox checked={useLowercase} onChange={setUseLowercase} label={t('Lowercase (a-z)')} />
+            <Checkbox checked={useUppercase} onChange={setUseUppercase} label={t('Uppercase (A-Z)')} />
+            <Checkbox checked={useNumbers} onChange={setUseNumbers} label={t('Numbers (0-9)')} />
+            <Checkbox checked={useSymbols} onChange={setUseSymbols} label={t('Symbols (!@#$...)')} />
           </div>
         </div>
 
         <div className="mt-4">
           <button className="btn-primary" onClick={handleGenerate}>
-            Generate Password
+            {t('Generate Password')}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="card mt-4 error-box border-0">
-          <p className="font-medium">Error</p>
+        <div className="error-box mt-4">
+          <p className="font-medium">{t('Error')}</p>
           <p className="mt-1 text-sm">{error}</p>
         </div>
       )}
@@ -174,22 +142,22 @@ export function PasswordGenerator() {
       {password && (
         <div className="mt-4">
           <div className="flex items-center justify-between mb-2">
-            <label className="tool-label mb-0">Generated Password</label>
+            <label className="tool-label mb-0">{t('Generated Password')}</label>
             <CopyButton text={password} />
           </div>
           <OutputBox content={password} />
 
           {strength && (
             <div className="card mt-4">
-              <label className="tool-label">Strength</label>
+              <label className="tool-label">{t('Strength')}</label>
               <div className="w-full bg-surface-700 rounded-full h-3 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-300 ${strength.color} ${strength.width}`}
                 />
               </div>
-              <p className="mt-2 text-sm font-medium">{strength.level}</p>
+              <p className="mt-2 text-sm font-medium">{t(strength.level)}</p>
               <p className="text-xs text-surface-500 mt-1">
-                Character pool: {charset.length} characters | Entropy: ~{Math.round(password.length * Math.log2(charset.length))} bits
+                {t('Character pool')}: {charset.length} {t('characters')} | {t('Entropy')}: ~{Math.round(password.length * Math.log2(charset.length))} {t('bits')}
               </p>
             </div>
           )}

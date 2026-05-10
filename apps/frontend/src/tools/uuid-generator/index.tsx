@@ -2,8 +2,11 @@ import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import Checkbox from '../../components/Checkbox';
+import { useI18n } from '../../hooks/useI18n';
 
 export function UuidGenerator() {
+  const { t } = useI18n();
   const [count, setCount] = useState(1);
   const [uuids, setUuids] = useState<string[]>([]);
   const [uppercase, setUppercase] = useState(false);
@@ -21,12 +24,12 @@ export function UuidGenerator() {
   const allUuidsText = uuids.join('\n');
 
   return (
-    <ToolLayout title="UUID Generator" description="Generate RFC 4122 version 4 UUIDs.">
+    <ToolLayout title={t('UUID Generator')} description={t('Generate RFC 4122 version 4 UUIDs.')}>
       <div className="card">
         <div className="flex flex-wrap items-end gap-4">
           <div>
             <label className="tool-label" htmlFor="uuid-count">
-              Count (1-100)
+              {t('Count (1-100)')}
             </label>
             <input
               id="uuid-count"
@@ -44,21 +47,12 @@ export function UuidGenerator() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              id="uuid-uppercase"
-              type="checkbox"
-              checked={uppercase}
-              onChange={(e) => setUppercase(e.target.checked)}
-              className="rounded border-surface-600"
-            />
-            <label className="tool-label mb-0 cursor-pointer" htmlFor="uuid-uppercase">
-              Uppercase
-            </label>
+          <div>
+            <Checkbox checked={uppercase} onChange={setUppercase} label={t('Uppercase')} />
           </div>
 
           <button className="btn-primary" onClick={generateUuids}>
-            Generate
+            {t('Generate')}
           </button>
         </div>
       </div>
@@ -67,7 +61,7 @@ export function UuidGenerator() {
         <div className="mt-4">
           <div className="flex items-center justify-between mb-2">
             <label className="tool-label mb-0">
-              Generated UUID{uuids.length > 1 ? 's' : ''} ({uuids.length})
+              {t('Generated UUID')}{uuids.length > 1 ? 's' : ''} ({uuids.length})
             </label>
             {uuids.length > 1 && <CopyButton text={allUuidsText} />}
           </div>
@@ -83,7 +77,7 @@ export function UuidGenerator() {
 
           {uuids.length > 1 && (
             <div className="mt-4">
-              <label className="tool-label">All UUIDs (plain text)</label>
+              <label className="tool-label">{t('All UUIDs (plain text)')}</label>
               <OutputBox content={allUuidsText} />
             </div>
           )}

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 function getRelativeTime(date: Date): string {
   const now = new Date();
@@ -28,6 +29,7 @@ function getRelativeTime(date: Date): string {
 }
 
 export function TimestampConverter() {
+  const { t } = useI18n();
   const [timestampInput, setTimestampInput] = useState('');
   const [dateInput, setDateInput] = useState('');
   const [timeInput, setTimeInput] = useState('');
@@ -146,23 +148,23 @@ export function TimestampConverter() {
     : '';
 
   return (
-    <ToolLayout title="Timestamp Converter" description="Convert between Unix timestamps and human-readable dates">
-      <div className="space-y-6">
+    <ToolLayout title={t('Timestamp Converter')} description={t('Convert between Unix timestamps and human-readable dates')}>
+      <div className="space-y-4">
         {/* Timestamp to Date */}
         <div className="card p-4 space-y-4">
-          <h3 className="font-semibold text-lg">Unix Timestamp to Date</h3>
+          <label className="tool-label">{t('Unix Timestamp to Date')}</label>
           <div>
-            <label className="tool-label">Unix Timestamp (seconds or milliseconds)</label>
+            <label className="tool-label">{t('Unix Timestamp (seconds or milliseconds)')}</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 className="tool-input flex-1"
-                placeholder="e.g. 1700000000 or 1700000000000"
+                placeholder={t('e.g. 1700000000 or 1700000000000')}
                 value={timestampInput}
                 onChange={(e) => setTimestampInput(e.target.value)}
               />
               <button className="btn-primary" onClick={setNow}>
-                Now
+                {t('Now')}
               </button>
             </div>
           </div>
@@ -170,7 +172,7 @@ export function TimestampConverter() {
           {convertedFromTs && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="font-medium">Result</h4>
+                <label className="tool-label">{t('Result')}</label>
                 <CopyButton text={tsOutputText} />
               </div>
               <OutputBox content={tsOutputText} />
@@ -180,10 +182,10 @@ export function TimestampConverter() {
 
         {/* Date to Timestamp */}
         <div className="card p-4 space-y-4">
-          <h3 className="font-semibold text-lg">Date to Unix Timestamp</h3>
+          <label className="tool-label">{t('Date to Unix Timestamp')}</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="tool-label">Date</label>
+              <label className="tool-label">{t('Date')}</label>
               <input
                 type="date"
                 className="tool-input"
@@ -192,7 +194,7 @@ export function TimestampConverter() {
               />
             </div>
             <div>
-              <label className="tool-label">Time (optional)</label>
+              <label className="tool-label">{t('Time (optional)')}</label>
               <input
                 type="time"
                 className="tool-input"
@@ -203,13 +205,13 @@ export function TimestampConverter() {
             </div>
           </div>
           <button className="btn-primary" onClick={convertDate}>
-            Convert to Timestamp
+            {t('Convert to Timestamp')}
           </button>
 
           {convertedFromDate && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="font-medium">Result</h4>
+                <label className="tool-label">{t('Result')}</label>
                 <CopyButton text={dateOutputText} />
               </div>
               <OutputBox content={dateOutputText} />
@@ -218,8 +220,8 @@ export function TimestampConverter() {
         </div>
 
         {error && (
-          <div className="card error-box border-0 p-4">
-            {error}
+          <div className="error-box">
+            {t(error)}
           </div>
         )}
       </div>

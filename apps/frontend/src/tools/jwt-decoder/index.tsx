@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 function decodeBase64Url(str: string): string {
   let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
@@ -34,6 +35,7 @@ function formatPayload(payload: Record<string, unknown>): Record<string, unknown
 }
 
 export function JwtDecoder() {
+  const { t } = useI18n();
   const [token, setToken] = useState('');
   const [header, setHeader] = useState('');
   const [payload, setPayload] = useState('');
@@ -86,38 +88,40 @@ export function JwtDecoder() {
   };
 
   return (
-    <ToolLayout title="JWT Decoder" description="Decode and inspect JSON Web Tokens">
+    <ToolLayout title={t('JWT Decoder')} description={t('Decode and inspect JSON Web Tokens')}>
       <div className="space-y-4">
-        <div>
-          <label className="tool-label">JWT Token</label>
-          <textarea
-            className="tool-textarea"
-            rows={4}
-            placeholder="Paste your JWT token here (e.g. eyJhbGciOiJI...)"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-          />
-        </div>
+        <div className="card">
+          <div>
+            <label className="tool-label">{t('JWT Token')}</label>
+            <textarea
+              className="tool-textarea"
+              rows={4}
+              placeholder={t('Paste your JWT token here (e.g. eyJhbGciOiJI...)')}
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+            />
+          </div>
 
-        <div className="flex gap-2">
-          <button className="btn-primary" onClick={decode}>
-            Decode
-          </button>
-          <button className="btn-secondary" onClick={clear}>
-            Clear
-          </button>
+          <div className="flex gap-2 mt-4">
+            <button className="btn-primary" onClick={decode}>
+              {t('Decode')}
+            </button>
+            <button className="btn-secondary" onClick={clear}>
+              {t('Clear')}
+            </button>
+          </div>
         </div>
 
         {error && (
-          <div className="card error-box border-0 p-4">
-            {error}
+          <div className="error-box">
+            {t(error)}
           </div>
         )}
 
         {header && (
           <div className="card p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Header</h3>
+              <label className="tool-label">{t('Header')}</label>
               <CopyButton text={header} />
             </div>
             <OutputBox content={header} />
@@ -127,7 +131,7 @@ export function JwtDecoder() {
         {payload && (
           <div className="card p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Payload</h3>
+              <label className="tool-label">{t('Payload')}</label>
               <CopyButton text={payload} />
             </div>
             <OutputBox content={payload} />
@@ -137,7 +141,7 @@ export function JwtDecoder() {
         {signature && (
           <div className="card p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">Signature</h3>
+              <label className="tool-label">{t('Signature')}</label>
               <CopyButton text={signature} />
             </div>
             <OutputBox content={signature} />

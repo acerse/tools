@@ -4,7 +4,7 @@ import { useI18n } from '../hooks/useI18n'
 
 export function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   const { theme, toggle } = useTheme()
-  const { locale, setLocale, t } = useI18n()
+  const { locale, setLocale, tk } = useI18n()
 
   return (
     <header className="sticky top-0 z-40 border-b border-surface-800/50 glass">
@@ -46,7 +46,7 @@ export function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
           <button
             onClick={toggle}
             className="rounded-xl p-2.5 text-surface-400 transition-all hover:bg-surface-800/50 hover:text-surface-200"
-            title={theme === 'dark' ? t('app.lightMode') : t('app.darkMode')}
+            title={theme === 'dark' ? tk('app.lightMode') : tk('app.darkMode')}
           >
             {theme === 'dark' ? (
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

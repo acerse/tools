@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ToolLayout from '../../components/ToolLayout';
 import OutputBox from '../../components/OutputBox';
 import CopyButton from '../../components/CopyButton';
+import { useI18n } from '../../hooks/useI18n';
 
 // Pure JavaScript MD5 implementation (RFC 1321)
 function md5(input: string): string {
@@ -153,6 +154,7 @@ function md5(input: string): string {
 }
 
 export function Md5Generator() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
   const [hash, setHash] = useState('');
   const [error, setError] = useState('');
@@ -181,47 +183,49 @@ export function Md5Generator() {
   };
 
   return (
-    <ToolLayout title="MD5 Hash Generator" description="Generate MD5 hashes from text (pure in-browser implementation)">
+    <ToolLayout title={t('MD5 Hash Generator')} description={t('Generate MD5 hashes from text (pure in-browser implementation)')}>
       <div className="space-y-4">
-        <div>
-          <label className="tool-label">Input Text</label>
-          <textarea
-            className="tool-textarea"
-            rows={6}
-            placeholder="Enter text to hash..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          {input && (
-            <p className="text-xs text-surface-500 mt-1">
-              {input.length} character{input.length !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
+        <div className="card">
+          <div>
+            <label className="tool-label">{t('Input Text')}</label>
+            <textarea
+              className="tool-textarea"
+              rows={6}
+              placeholder={t('Enter text to hash...')}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            {input && (
+              <p className="text-xs text-surface-500 mt-1">
+                {input.length} {input.length !== 1 ? t('characters') : t('character')}
+              </p>
+            )}
+          </div>
 
-        <div className="flex gap-2">
-          <button className="btn-primary" onClick={generate}>
-            Generate Hash
-          </button>
-          <button className="btn-secondary" onClick={clear}>
-            Clear
-          </button>
+          <div className="flex gap-2 mt-4">
+            <button className="btn-primary" onClick={generate}>
+              {t('Generate Hash')}
+            </button>
+            <button className="btn-secondary" onClick={clear}>
+              {t('Clear')}
+            </button>
+          </div>
         </div>
 
         {error && (
-          <div className="card error-box border-0 p-4">
-            {error}
+          <div className="error-box">
+            {t(error)}
           </div>
         )}
 
         {hash && (
           <div className="card p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">MD5 Hash (Hex)</h3>
+              <label className="tool-label">{t('MD5 Hash (Hex)')}</label>
               <CopyButton text={hash} />
             </div>
             <OutputBox content={hash} />
-            <p className="text-xs text-surface-500">128 bits / 16 bytes</p>
+            <p className="text-xs text-surface-500">128 {t('bits')} / 16 {t('bytes')}</p>
           </div>
         )}
       </div>
